@@ -3,6 +3,10 @@ import { User } from './user.entity';
 import { CustomRepository } from '../common/typeorm.decorator';
 import { AuthCredentialDto } from './dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
+import {
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 @CustomRepository(User)
 export class UserRepository extends Repository<User> {
@@ -18,6 +22,15 @@ export class UserRepository extends Repository<User> {
     });
 
     await this.save(user);
+    try {
+
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException('user is exist');
+      } else {
+        throw new InternalServerErrorException(error);
+      }
+    }
     return user;
   }
 }
