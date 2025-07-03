@@ -1,4 +1,21 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { AuthCredentialDto } from './dto/auth-credential.dto';
+import { User } from './user.entity';
 
 @Controller('auth')
-export class AuthController {}
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @Post('/signup')
+  @UsePipes(ValidationPipe)
+  createUser(@Body() authCreateDto: AuthCredentialDto): Promise<User> {
+    return this.authService.createUser(authCreateDto);
+  }
+}
