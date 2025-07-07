@@ -9,8 +9,11 @@ import { User } from '../auth/user.entity';
 export class BoardService {
   constructor(private boardRepository: BoardRepository) {}
 
-  async getAllBoard(): Promise<Board[]> {
-    return this.boardRepository.find();
+  async getAllBoard(user: User): Promise<Board[]> {
+    const query = this.boardRepository
+      .createQueryBuilder('board')
+      .where('board.user_id = :userId', { userId: user.id });
+    return await query.getMany();
   }
 
   async getBoard(id: number): Promise<Board> {
