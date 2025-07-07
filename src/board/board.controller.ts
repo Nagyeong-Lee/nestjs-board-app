@@ -4,8 +4,10 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe, Patch,
-  Post, UseGuards,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -35,20 +37,26 @@ export class BoardController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  create(@Body() createBoardDto: CreateBoardDto, @GetUser() user: User): Promise<Board> {
+  create(
+    @Body() createBoardDto: CreateBoardDto,
+    @GetUser() user: User
+  ): Promise<Board> {
     return this.boardService.create(createBoardDto, user);
   }
 
   @Delete('/:id')
-  deleteById(@Param('id', ParseIntPipe) id: number) {
-    return this.boardService.delete(id);
+  deleteById(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User
+  ): Promise<void> {
+    return this.boardService.delete(id, user.id);
   }
 
   @Patch('/:id/status')
   updateBoardStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', BoardStatusValidationPipe) status: BoardStatus
-    ): Promise<Board> {
+  ): Promise<Board> {
     return this.boardService.updateBoardStatus(id, status);
   }
 }
