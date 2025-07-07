@@ -11,6 +11,7 @@ import { AuthCredentialDto } from './dto/auth-credential.dto';
 import { User } from './user.entity';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from './decorator/get-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +31,7 @@ export class AuthController {
 
   @Get('token-valid-test')
   @UseGuards(AuthGuard())
-  tokenValidTest(@Req() req: Request) {
-    this.logger.log(req.user);
+  tokenValidTest(@GetUser() user: User) {
+    this.logger.log('user :: ', user);
   }
 }
